@@ -61,7 +61,7 @@ become the appropriate user.
 Usage
 --------
 
-Usage: ./pkt2flow [-huvx] [-o outdir] pcapfile
+Usage: ./pkt2flow [-huvxd] [-o outdir] pcapfile
 
 	Options:
 		-h	print this help and exit
@@ -69,4 +69,5 @@ Usage: ./pkt2flow [-huvx] [-o outdir] pcapfile
 		-v	also dump the in(v)alid TCP flows without the SYN option
 		-x	also dump non-UDP/non-TCP IP flows
 		-o	(o)utput directory
-
+        	-d      Whether to distribute traffic in output pcap files
+                	considering (d)irection or not. Default 'No'
