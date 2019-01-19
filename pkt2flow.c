@@ -58,26 +58,31 @@ static char *outputdir = "pkt2flow.out";
 static pcap_t *inputp = NULL;
 struct ip_pair *pairs[HASH_TBL_SIZE];
 
+/* By default create pcap file by not considering direction of the packets */
+unsigned int ignoredirection = 1;
+
 static void usage(char *progname)
 {
 	fprintf(stderr, "Name: %s\n", __GLOBAL_NAME__);
 	fprintf(stderr, "Version: %s\n", __SOURCE_VERSION__);
 	fprintf(stderr, "Author: %s\n", __AUTHOR__);
 	fprintf(stderr, "Program to seperate the packets into flows (UDP or TCP).\n\n");
-	fprintf(stderr, "Usage: %s [-huvx] [-o outdir] pcapfile\n\n", progname);
+	fprintf(stderr, "Usage: %s [-huvxd] [-o outdir] pcapfile\n\n", progname);
 	fprintf(stderr, "Options:\n");
 	fprintf(stderr, "	-h	print this help and exit\n");
 	fprintf(stderr, "	-u	also dump (U)DP flows\n");
 	fprintf(stderr, "	-v	also dump the in(v)alid TCP flows without the SYN option\n");
 	fprintf(stderr, "	-x	also dump non-UDP/non-TCP IP flows\n");
 	fprintf(stderr, "	-o	(o)utput directory\n");
+	fprintf(stderr, "	-d	Whether to distribute traffic in output pcap files \n");
+        fprintf(stderr, "                considering (d)irection or not. Default 'No'\n");
 }
 
 
 static void parseargs(int argc, char *argv[])
 {
 	int opt;
-	const char *optstr = "uvxo:h";
+	const char *optstr = "uvxo:dh";
 	while ((opt = getopt(argc, argv, optstr)) != -1) {
 		switch (opt) {
 		case 'h':
@@ -94,6 +99,9 @@ static void parseargs(int argc, char *argv[])
 			break;
 		case 'x':
 			dump_allowed |= DUMP_OTHER_ALLOWED;
+			break;
+		case 'd':
+			ignoredirection = 0;
 			break;
 		default:
 			usage(argv [0]);

@@ -41,6 +41,8 @@
 
 struct ip_pair *pairs [HASH_TBL_SIZE];
 
+extern unsigned int ignoredirection;
+
 void init_hash_table(void)
 {
 	memset(pairs, 0, sizeof(struct ip_pair *) * HASH_TBL_SIZE);
@@ -89,8 +91,8 @@ static unsigned int hash_5tuple(struct af_6tuple af_6tuple)
 	unsigned int hash1 = 0;
 	unsigned int hash2 = 0;
 	int i;
-
-	for (i = 0; i < 2; i++) {
+        unsigned int dir = (ignoredirection)?2:1;
+	for (i = 0; i < dir; i++) {
 		if (i == 0) {
 			switch (af_6tuple.af_family) {
 			case AF_INET:
